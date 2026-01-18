@@ -1,0 +1,374 @@
+openapi: 3.0.3
+info:
+  title: Team Manager Leagues API
+  version: 0.1.0
+  description: Leagues, series, and team registrations.
+servers:
+  - url: http://localhost:8083
+paths:
+  /leagues:
+    post:
+      summary: Create league
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLeagueRequest'
+      responses:
+        '200':
+          description: League created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeagueResponse'
+    get:
+      summary: List leagues
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Leagues list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaguesResponse'
+  /leagues/{id}:
+    get:
+      summary: Get league
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LeagueId'
+      responses:
+        '200':
+          description: League
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeagueResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Update league
+      description: Planned endpoint. Not yet wired in router.
+      x-status: planned
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LeagueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLeagueRequest'
+      responses:
+        '200':
+          description: League updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeagueResponse'
+    delete:
+      summary: Delete league
+      description: Planned endpoint. Not yet wired in router.
+      x-status: planned
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LeagueId'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /leagues/{id}/series:
+    post:
+      summary: Create series
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LeagueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSeriesRequest'
+      responses:
+        '200':
+          description: Series created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeriesResponse'
+    get:
+      summary: List series by league
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LeagueId'
+      responses:
+        '200':
+          description: Series list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeriesListResponse'
+  /leagues/{id}/series/{seriesId}:
+    put:
+      summary: Update series
+      description: Planned endpoint. Not yet wired in router.
+      x-status: planned
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LeagueId'
+        - $ref: '#/components/parameters/SeriesId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSeriesRequest'
+      responses:
+        '200':
+          description: Series updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeriesResponse'
+    delete:
+      summary: Delete series
+      description: Planned endpoint. Not yet wired in router.
+      x-status: planned
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/LeagueId'
+        - $ref: '#/components/parameters/SeriesId'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /registrations:
+    post:
+      summary: Register team
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterTeamRequest'
+      responses:
+        '200':
+          description: Registration created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationResponse'
+    get:
+      summary: List registrations
+      description: Planned endpoint. Not yet wired in router.
+      x-status: planned
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: teamId
+          in: query
+          schema:
+            type: string
+        - name: seriesId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Registrations list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationsResponse'
+  /registrations/{id}:
+    put:
+      summary: Update registration status
+      description: Planned endpoint. Not yet wired in router.
+      x-status: planned
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RegistrationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRegistrationRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationResponse'
+    delete:
+      summary: Cancel registration
+      description: Planned endpoint. Not yet wired in router.
+      x-status: planned
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RegistrationId'
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    LeagueId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    SeriesId:
+      name: seriesId
+      in: path
+      required: true
+      schema:
+        type: string
+    RegistrationId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    CreateLeagueRequest:
+      type: object
+      required: [name, region]
+      properties:
+        name: { type: string }
+        region: { type: string }
+    UpdateLeagueRequest:
+      type: object
+      required: [name, region]
+      properties:
+        name: { type: string }
+        region: { type: string }
+    League:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        slug: { type: string }
+        region: { type: string }
+        createdBy: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    LeagueResponse:
+      type: object
+      properties:
+        league:
+          $ref: '#/components/schemas/League'
+    LeaguesResponse:
+      type: object
+      properties:
+        leagues:
+          type: array
+          items:
+            $ref: '#/components/schemas/League'
+    CreateSeriesRequest:
+      type: object
+      required: [name, format]
+      properties:
+        name: { type: string }
+        format: { type: string }
+    UpdateSeriesRequest:
+      type: object
+      required: [name, format]
+      properties:
+        name: { type: string }
+        format: { type: string }
+    Series:
+      type: object
+      properties:
+        id: { type: string }
+        leagueId: { type: string }
+        name: { type: string }
+        format: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    SeriesResponse:
+      type: object
+      properties:
+        series:
+          $ref: '#/components/schemas/Series'
+    SeriesListResponse:
+      type: object
+      properties:
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/Series'
+    RegisterTeamRequest:
+      type: object
+      required: [teamId, seriesId]
+      properties:
+        teamId: { type: string }
+        seriesId: { type: string }
+    Registration:
+      type: object
+      properties:
+        id: { type: string }
+        teamId: { type: string }
+        seriesId: { type: string }
+        status: { type: string }
+        createdAt: { type: string, format: date-time }
+    RegistrationResponse:
+      type: object
+      properties:
+        registration:
+          $ref: '#/components/schemas/Registration'
+    RegistrationsResponse:
+      type: object
+      properties:
+        registrations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Registration'
+    UpdateRegistrationRequest:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string }
+    SuccessResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+    ErrorResponse:
+      type: object
+      properties:
+        message: { type: string }

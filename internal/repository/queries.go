@@ -57,6 +57,8 @@ const (
 	QInsertTeamRegistration      = `INSERT INTO team_registrations (id, team_id, series_id, status, created_at) VALUES ($1,$2,$3,$4,now())`
 	QSelectRegistrationsByTeam   = `SELECT id, team_id, series_id, status, created_at FROM team_registrations WHERE team_id=$1`
 	QSelectRegistrationsBySeries = `SELECT id, team_id, series_id, status, created_at FROM team_registrations WHERE series_id=$1`
+	QUpdateRegistrationStatus    = `UPDATE team_registrations SET status=$2 WHERE id=$1`
+	QDeleteRegistration          = `DELETE FROM team_registrations WHERE id=$1`
 
 	// Read-only queries for validation (assuming shared DB)
 	QSelectTeamByID        = `SELECT id, club_id, name, format, created_at, updated_at FROM teams WHERE id=$1`

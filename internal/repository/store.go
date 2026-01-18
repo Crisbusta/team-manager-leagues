@@ -136,6 +136,16 @@ func (s *Store) ListRegistrationsBySeries(ctx context.Context, seriesID string) 
 	return out, rows.Err()
 }
 
+func (s *Store) UpdateRegistrationStatus(ctx context.Context, id, status string) error {
+	_, err := s.Pool.Exec(ctx, QUpdateRegistrationStatus, id, status)
+	return err
+}
+
+func (s *Store) DeleteRegistration(ctx context.Context, id string) error {
+	_, err := s.Pool.Exec(ctx, QDeleteRegistration, id)
+	return err
+}
+
 // Read-only helpers
 func (s *Store) GetTeamByID(ctx context.Context, id string) (*domain.Team, error) {
 	row := s.Pool.QueryRow(ctx, QSelectTeamByID, id)

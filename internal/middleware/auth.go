@@ -15,13 +15,13 @@ func AuthMiddleware(cfg config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Missing authorization header"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Missing authorization header"})
 			return
 		}
 
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization header format"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Invalid authorization header format"})
 			return
 		}
 
@@ -34,19 +34,19 @@ func AuthMiddleware(cfg config.Config) gin.HandlerFunc {
 		})
 
 		if err != nil || !token.Valid {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Invalid token"})
 			return
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Invalid token claims"})
 			return
 		}
 
 		sub, ok := claims["sub"].(string)
 		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token subject"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Invalid token subject"})
 			return
 		}
 

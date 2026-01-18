@@ -88,6 +88,18 @@ func (s *LeaguesService) GetSeries(ctx context.Context, id string) (*domain.Seri
 	return s.store.GetSeriesByID(ctx, id)
 }
 
+func (s *LeaguesService) UpdateSeries(ctx context.Context, id, name, format string) error {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return errors.New("invalid name")
+	}
+	return s.store.UpdateSeries(ctx, id, name, format)
+}
+
+func (s *LeaguesService) DeleteSeries(ctx context.Context, id string) error {
+	return s.store.DeleteSeries(ctx, id)
+}
+
 // Registrations
 
 func (s *LeaguesService) RegisterTeam(ctx context.Context, userID, teamID, seriesID string) (*domain.TeamRegistration, error) {
@@ -125,4 +137,16 @@ func (s *LeaguesService) ListRegistrationsByTeam(ctx context.Context, teamID str
 
 func (s *LeaguesService) ListRegistrationsBySeries(ctx context.Context, seriesID string) ([]domain.TeamRegistration, error) {
 	return s.store.ListRegistrationsBySeries(ctx, seriesID)
+}
+
+func (s *LeaguesService) UpdateRegistrationStatus(ctx context.Context, id, status string) error {
+	status = strings.TrimSpace(status)
+	if status == "" {
+		return errors.New("invalid status")
+	}
+	return s.store.UpdateRegistrationStatus(ctx, id, status)
+}
+
+func (s *LeaguesService) DeleteRegistration(ctx context.Context, id string) error {
+	return s.store.DeleteRegistration(ctx, id)
 }
